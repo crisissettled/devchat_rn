@@ -1,49 +1,58 @@
-import * as React from 'react';
-import {View, Text, Button} from 'react-native';
+import {Button, alert} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-function HomeScreen({navigation}) {
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Home Screen</Text>
-      <Button
-        title="Go to Details"
-        onPress={() => navigation.navigate('Details')}
-      />
-    </View>
-  );
-}
+import {RootStackParamList} from './types/StackScreen';
 
-function DetailsScreen({navigation}) {
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Details Screen</Text>
-      <Button
-        title="Go to Details... again"
-        onPress={() => navigation.push('Details')}
-      />
-      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
-      <Button title="Go back" onPress={() => navigation.goBack()} />
-      <Button
-        title="Go back to first screen in stack"
-        onPress={() => navigation.popToTop()}
-      />
-    </View>
-  );
-}
+import HomeScreen from './screens/HomeScreen';
+import CreatePostScreen from './screens/CreatePostScreen';
 
-const Stack = createNativeStackNavigator();
+import LogoTitle from './component/LogoTitle';
 
-function App() {
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Details" component={DetailsScreen} />
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#f2c1d0',
+          },
+          headerTintColor: '#e5771d',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            // title: 'My home',
+            // headerStyle: {
+            //   backgroundColor: '#baa',
+            // },
+            // headerTintColor: '#dfd',
+            // headerTitleStyle: {
+            //   fontWeight: 'bold',
+            // },
+
+            headerTitle: props => <LogoTitle />,
+            headerRight: () => (
+              <Button
+                onPress={() => console.log('This is a Header button!')}
+                title="Info"
+                color="#0081F1"
+              />
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="CreatePost"
+          component={CreatePostScreen}
+          options={({route}) => ({title: route.params.name})}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
-export default App;
