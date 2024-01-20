@@ -1,30 +1,78 @@
-import {Text} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import * as React from 'react';
+import {View, Button} from 'react-native';
+import {
+  NavigationContainer,
+  getFocusedRouteNameFromRoute,
+} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import HomeStackScreen from './screens/HomeScreen';
-import SettingsStackScreen from './screens/SettingsScreen';
+function getHeaderTitle(route) {
+  // If the focused route is not found, we need to assume it's the initial screen
+  // This can happen during if there hasn't been any navigation inside the screen
+  // In our case, it's "Feed" as that's the first screen inside the navigator
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Feed';
+
+  switch (routeName) {
+    case 'Feed':
+      return 'News feed';
+    case 'Profile':
+      return 'My profile';
+    case 'Account':
+      return 'My account';
+  }
+}
+
+function FeedScreen({navigation}) {
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Button
+        title="Go to Settings"
+        onPress={() => navigation.navigate('Settings')}
+      />
+    </View>
+  );
+}
+
+function ProfileScreen() {
+  return <View />;
+}
+
+function AccountScreen() {
+  return <View />;
+}
+
+function SettingsScreen() {
+  return <View />;
+}
 
 const Tab = createBottomTabNavigator();
+
+function HomeTabs() {
+  return (
+    <Tab.Navigator screenOptions={{headerShown: false}}>
+      <Tab.Screen name="Feed" component={FeedScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Account" component={AccountScreen} />
+    </Tab.Navigator>
+  );
+}
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen
+      <Stack.Navigator>
+        <Stack.Screen
           name="Home"
-          component={HomeStackScreen}
-          options={{tabBarLabel: 'Home!'}}
+          component={HomeTabs}
+          options={({route}) => ({
+            headerTitle: getHeaderTitle(route),
+          })}
         />
-        <Tab.Screen
-          name="Settings"
-          component={SettingsStackScreen}
-          options={{
-            tabBarLabel: 'Settings!',
-            headerRight: () => <Text>Hello</Text>,
-          }}
-        />
-      </Tab.Navigator>
+        <Stack.Screen name="Settings" component={SettingsScreen} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
