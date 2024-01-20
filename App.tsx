@@ -1,58 +1,30 @@
-import {Button, alert} from 'react-native';
+import {Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import {RootStackParamList} from './types/StackScreen';
+import HomeStackScreen from './screens/HomeScreen';
+import SettingsStackScreen from './screens/SettingsScreen';
 
-import HomeScreen from './screens/HomeScreen';
-import CreatePostScreen from './screens/CreatePostScreen';
-
-import LogoTitle from './component/LogoTitle';
-
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: '#f2c1d0',
-          },
-          headerTintColor: '#e5771d',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        }}>
-        <Stack.Screen
+      <Tab.Navigator>
+        <Tab.Screen
           name="Home"
-          component={HomeScreen}
+          component={HomeStackScreen}
+          options={{tabBarLabel: 'Home!'}}
+        />
+        <Tab.Screen
+          name="Settings"
+          component={SettingsStackScreen}
           options={{
-            // title: 'My home',
-            // headerStyle: {
-            //   backgroundColor: '#baa',
-            // },
-            // headerTintColor: '#dfd',
-            // headerTitleStyle: {
-            //   fontWeight: 'bold',
-            // },
-
-            headerTitle: props => <LogoTitle />,
-            headerRight: () => (
-              <Button
-                onPress={() => console.log('This is a Header button!')}
-                title="Info"
-                color="#0081F1"
-              />
-            ),
+            tabBarLabel: 'Settings!',
+            headerRight: () => <Text>Hello</Text>,
           }}
         />
-        <Stack.Screen
-          name="CreatePost"
-          component={CreatePostScreen}
-          options={({route}) => ({title: route.params.name})}
-        />
-      </Stack.Navigator>
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }

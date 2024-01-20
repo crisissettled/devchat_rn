@@ -1,40 +1,18 @@
-import {useState, useEffect} from 'react';
-import {View, Text, Button, TextInput} from 'react-native';
+import {View} from 'react-native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import {PropsHome} from '../types/StackScreen';
+const HomeStack = createNativeStackNavigator();
 
-function HomeScreen({navigation, route}: PropsHome) {
-  const [count, setCount] = useState(0);
+function A() {
+  return <View />;
+}
 
-  useEffect(() => {
-    if (route.params?.post) {
-      console.log(route.params?.post, 'post1');
-    }
-  }, [route.params?.post]);
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Button onPress={() => setCount(c => c + 1)} title="Update count" />
-      ),
-    });
-  }, [navigation]);
-
+function HomeStackScreen() {
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Count: {count}</Text>
-      <Button
-        title="Create post"
-        onPress={() =>
-          navigation.navigate('CreatePost', {
-            userId: 'james',
-            name: 'my create post',
-          })
-        }
-      />
-      <Text style={{margin: 10}}>Post: {route.params?.post}</Text>
-    </View>
+    <HomeStack.Navigator>
+      <HomeStack.Screen name="A" component={A} />
+    </HomeStack.Navigator>
   );
 }
 
-export default HomeScreen;
+export default HomeStackScreen;
