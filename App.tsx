@@ -1,58 +1,31 @@
-import {Button, alert} from 'react-native';
+import 'react-native-gesture-handler';
+
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-
-import {RootStackParamList} from './types/StackScreen';
+// import {createStackNavigator} from '@react-navigation/stack';
 
 import HomeScreen from './screens/HomeScreen';
-import CreatePostScreen from './screens/CreatePostScreen';
+import DetailsScreen from './screens/DetailScreen';
+import ModalScreen from './screens/ModalScreen';
 
-import LogoTitle from './component/LogoTitle';
+// const RootStack = createStackNavigator();
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator();
 
-export default function App() {
+function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: '#f2c1d0',
-          },
-          headerTintColor: '#e5771d',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        }}>
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            // title: 'My home',
-            // headerStyle: {
-            //   backgroundColor: '#baa',
-            // },
-            // headerTintColor: '#dfd',
-            // headerTitleStyle: {
-            //   fontWeight: 'bold',
-            // },
-
-            headerTitle: props => <LogoTitle />,
-            headerRight: () => (
-              <Button
-                onPress={() => console.log('This is a Header button!')}
-                title="Info"
-                color="#0081F1"
-              />
-            ),
-          }}
-        />
-        <Stack.Screen
-          name="CreatePost"
-          component={CreatePostScreen}
-          options={({route}) => ({title: route.params.name})}
-        />
+      <Stack.Navigator>
+        <Stack.Group>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Details" component={DetailsScreen} />
+        </Stack.Group>
+        <Stack.Group screenOptions={{presentation: 'modal'}}>
+          <Stack.Screen name="MyModal" component={ModalScreen} />
+        </Stack.Group>
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
+export default App;
