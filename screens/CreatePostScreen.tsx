@@ -1,57 +1,31 @@
-import {useEffect, useState} from 'react';
-import {View, Text, Button, TextInput} from 'react-native';
+import {View, Text, StatusBar, Button, StyleSheet} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {PropsCreatePost} from '../types/StackScreen';
+import {styles} from '../css/SharedCSS';
 
-function CreatePostScreen({navigation, route}: PropsCreatePost) {
-  const [postText, setPostText] = useState('');
-  const {userId} = route.params;
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => (
-        <Button title="back" onPress={() => navigation.navigate('Home')} />
-      ),
-    });
-  }, []);
+function CreatePostScreen({navigation}) {
+  const insets = useSafeAreaInsets();
 
   return (
-    <>
-      <View>
-        <Text style={{padding: 10, fontSize: 35, fontWeight: 'bold'}}>
-          Hi {userId},
-        </Text>
-      </View>
-      <TextInput
-        multiline
-        placeholder="What's on your mind?"
-        style={{height: 200, padding: 10, backgroundColor: 'white'}}
-        value={postText}
-        onChangeText={setPostText}
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: '#6a51ae',
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+        },
+      ]}>
+      <StatusBar barStyle="light-content" backgroundColor="#6a51ae" />
+      <Text style={{color: '#fff'}}>Light Screen - POST</Text>
+      <Button
+        title="Next screen"
+        onPress={() => navigation.navigate('Home')}
+        color="#0E00FF"
       />
-      <View style={{padding: 5}}>
-        <Button
-          title="Done"
-          onPress={() => {
-            // Pass and merge params back to home screen
-            navigation.navigate({
-              name: 'Home',
-              params: {post: postText},
-              merge: true,
-            });
-          }}
-        />
-      </View>
-      <View style={{padding: 5}}>
-        <Button
-          title="Change Title"
-          onPress={() => {
-            const r = (Math.random() * 100).toFixed(2);
-            navigation.setOptions({title: `New Create Post - ${r}`});
-          }}
-        />
-      </View>
-    </>
+    </View>
   );
 }
 
