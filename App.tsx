@@ -1,74 +1,104 @@
 import * as React from 'react';
-import {View, Button} from 'react-native';
+import {
+  Pressable,
+  Text,
+  View,
+  Button,
+  BackHandler,
+  StyleSheet,
+} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {useFocusEffect} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-function FeedScreen({navigation}) {
+const Stack = createNativeStackNavigator();
+
+const listData = [{key: 'Apple'}, {key: 'Orange'}, {key: 'Carrot'}];
+
+function ScreenWithCustomBackBehavior() {
+  const [selected, setSelected] = React.useState(listData[0].key);
+  const [isSelectionModeEnabled, setIsSelectionModeEnabled] =
+    React.useState(false);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        if (isSelectionModeEnabled) {
+          setIsSelectionModeEnabled(false);
+          return true;
+        } else {
+          return false;
+        }
+      };
+
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress,
+      );
+
+      return () => subscription.remove();
+    }, [isSelectionModeEnabled]),
+  );
+
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <View style={styles.container}>
+      {listData.map((item, index) => (
+        <>
+          {isSelectionModeEnabled ? (
+            <Pressable
+              key={index}
+              onPress={() => {
+                setSelected(item.key);
+              }}
+              style={{
+                textDecorationLine: item.key === selected ? 'underline' : '',
+              }}>
+              <Text
+                style={{
+                  textDecorationLine: item.key === selected ? 'underline' : '',
+                  ...styles.text,
+                }}>
+                {item.key}
+              </Text>
+            </Pressable>
+          ) : (
+            <Text style={styles.text} key={index}>
+              {item.key === selected ? 'Selected: ' : ''}
+              {item.key}
+            </Text>
+          )}
+        </>
+      ))}
       <Button
-        title="Go to Settings"
-        onPress={() => navigation.navigate('Settings')}
+        title="Toggle selection mode"
+        onPress={() => setIsSelectionModeEnabled(!isSelectionModeEnabled)}
       />
+      <Text>Selection mode: {isSelectionModeEnabled ? 'ON' : 'OFF'}</Text>
     </View>
   );
 }
 
-function ProfileScreen() {
-  return <View />;
-}
-
-function SettingsScreen() {
-  return <View />;
-}
-
-const FeedStack = createNativeStackNavigator();
-
-function FeedStackScreen() {
-  return (
-    <FeedStack.Navigator>
-      <FeedStack.Screen name="Feed" component={FeedScreen} />
-      {/* other screens */}
-    </FeedStack.Navigator>
-  );
-}
-
-const ProfileStack = createNativeStackNavigator();
-
-function ProfileStackScreen() {
-  return (
-    <ProfileStack.Navigator>
-      <ProfileStack.Screen name="Profile" component={ProfileScreen} />
-      {/* other screens */}
-    </ProfileStack.Navigator>
-  );
-}
-
-const Tab = createBottomTabNavigator();
-
-function HomeTabs() {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="Feed" component={FeedStackScreen} />
-      <Tab.Screen name="Profile" component={ProfileStackScreen} />
-    </Tab.Navigator>
-  );
-}
-
-const RootStack = createNativeStackNavigator();
-
 export default function App() {
   return (
     <NavigationContainer>
-      <RootStack.Navigator>
-        <RootStack.Screen
-          name="Home"
-          component={HomeTabs}
-          options={{headerShown: false}}
+      <Stack.Navigator>
+        <Stack.Screen
+          name="CustomScreen"
+          component={ScreenWithCustomBackBehavior}
         />
-        <RootStack.Screen name="Settings" component={SettingsScreen} />
-      </RootStack.Navigator>
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    fontSize: 20,
+    marginBottom: 20,
+  },
+});
