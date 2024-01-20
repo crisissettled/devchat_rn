@@ -2,6 +2,7 @@ import {View, Text, StatusBar, Button, StyleSheet} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {styles} from '../css/SharedCSS';
+import FocusAwareStatusBar from '../component/FocusAwareStatusBar';
 
 function CreatePostScreen({navigation}) {
   const insets = useSafeAreaInsets();
@@ -18,7 +19,7 @@ function CreatePostScreen({navigation}) {
           paddingRight: insets.right,
         },
       ]}>
-      <StatusBar barStyle="light-content" backgroundColor="#6a51ae" />
+      <FocusAwareStatusBar barStyle="light-content" backgroundColor="#6a51ae" />
       <Text style={{color: '#fff'}}>Light Screen - POST</Text>
       <Button
         title="Next screen"
