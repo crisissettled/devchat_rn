@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {Alert, View, TextInput, StyleSheet} from 'react-native';
-import {Button} from 'react-native-paper';
+import {Alert, View, TextInput, StyleSheet, Button} from 'react-native';
+
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -52,11 +52,8 @@ const HomeScreen = ({navigation}) => {
   return (
     <View style={styles.buttons}>
       <Button
-        mode="contained"
         onPress={() => navigation.push('EditText')}
-        style={styles.button}>
-        Push EditText
-      </Button>
+        title="Push EditText"></Button>
     </View>
   );
 };
