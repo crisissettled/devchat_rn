@@ -1,104 +1,98 @@
 import * as React from 'react';
-import {
-  Pressable,
-  Text,
-  View,
-  Button,
-  BackHandler,
-  StyleSheet,
-} from 'react-native';
+import {Alert, View, TextInput, StyleSheet} from 'react-native';
+import {Button} from 'react-native-paper';
 import {NavigationContainer} from '@react-navigation/native';
-import {useFocusEffect} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-const Stack = createNativeStackNavigator();
+const EditTextScreen = ({navigation}) => {
+  const [text, setText] = React.useState('');
 
-const listData = [{key: 'Apple'}, {key: 'Orange'}, {key: 'Carrot'}];
+  const hasUnsavedChanges = Boolean(text);
 
-function ScreenWithCustomBackBehavior() {
-  const [selected, setSelected] = React.useState(listData[0].key);
-  const [isSelectionModeEnabled, setIsSelectionModeEnabled] =
-    React.useState(false);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      const onBackPress = () => {
-        if (isSelectionModeEnabled) {
-          setIsSelectionModeEnabled(false);
-          return true;
-        } else {
-          return false;
+  React.useEffect(
+    () =>
+      navigation.addListener('beforeRemove', e => {
+        const action = e.data.action;
+        if (!hasUnsavedChanges) {
+          return;
         }
-      };
 
-      const subscription = BackHandler.addEventListener(
-        'hardwareBackPress',
-        onBackPress,
-      );
+        e.preventDefault();
 
-      return () => subscription.remove();
-    }, [isSelectionModeEnabled]),
+        Alert.alert(
+          'Discard changes?',
+          'You have unsaved changes. Are you sure to discard them and leave the screen?',
+          [
+            {text: "Don't leave", style: 'cancel', onPress: () => {}},
+            {
+              text: 'Discard',
+              style: 'destructive',
+              onPress: () => navigation.dispatch(action),
+            },
+          ],
+        );
+      }),
+    [hasUnsavedChanges, navigation],
   );
 
   return (
-    <View style={styles.container}>
-      {listData.map((item, index) => (
-        <>
-          {isSelectionModeEnabled ? (
-            <Pressable
-              key={index}
-              onPress={() => {
-                setSelected(item.key);
-              }}
-              style={{
-                textDecorationLine: item.key === selected ? 'underline' : '',
-              }}>
-              <Text
-                style={{
-                  textDecorationLine: item.key === selected ? 'underline' : '',
-                  ...styles.text,
-                }}>
-                {item.key}
-              </Text>
-            </Pressable>
-          ) : (
-            <Text style={styles.text} key={index}>
-              {item.key === selected ? 'Selected: ' : ''}
-              {item.key}
-            </Text>
-          )}
-        </>
-      ))}
-      <Button
-        title="Toggle selection mode"
-        onPress={() => setIsSelectionModeEnabled(!isSelectionModeEnabled)}
+    <View style={styles.content}>
+      <TextInput
+        autoFocus
+        style={styles.input}
+        value={text}
+        placeholder="Type something…"
+        onChangeText={setText}
       />
-      <Text>Selection mode: {isSelectionModeEnabled ? 'ON' : 'OFF'}</Text>
     </View>
   );
-}
+};
+
+const HomeScreen = ({navigation}) => {
+  return (
+    <View style={styles.buttons}>
+      <Button
+        mode="contained"
+        onPress={() => navigation.push('EditText')}
+        style={styles.button}>
+        Push EditText
+      </Button>
+    </View>
+  );
+};
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
-          name="CustomScreen"
-          component={ScreenWithCustomBackBehavior}
-        />
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="EditText" component={EditTextScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  content: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 16,
   },
-  text: {
-    fontSize: 20,
-    marginBottom: 20,
+  input: {
+    margin: 8,
+    padding: 10,
+    borderRadius: 3,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: 'rgba(0, 0, 0, 0.08)',
+    backgroundColor: 'white',
+  },
+  buttons: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 8,
+  },
+  button: {
+    margin: 8,
   },
 });
