@@ -9,10 +9,11 @@ import HomeScreen from './screens/HomeScreen';
 import {AuthContext} from './utils/authContext';
 
 import {AuthStateProps, AuthActionProps} from './types/auth';
+import {RootStackParamList} from './types/StackScreen';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export default function App({navigation}) {
+export default function App() {
   const initState = {
     isLoading: true,
     isSignout: false,
@@ -48,7 +49,7 @@ export default function App({navigation}) {
   useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
-      let userToken;
+      let userToken = null;
 
       try {
         // Restore token stored in `SecureStore` or any other encrypted storage
@@ -104,13 +105,14 @@ export default function App({navigation}) {
               component={SignInScreen}
               options={{
                 title: 'Sign in',
+                headerShown: false,
                 // When logging out, a pop animation feels intuitive
                 animationTypeForReplace: state.isSignout ? 'pop' : 'push',
               }}
             />
           ) : (
             // User is signed in
-            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="ChatTabs" component={HomeScreen} />
           )}
         </Stack.Navigator>
       </NavigationContainer>

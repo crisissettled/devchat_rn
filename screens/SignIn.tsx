@@ -20,6 +20,16 @@ function SignInScreen() {
 
   return (
     <View>
+      <Text
+        style={{
+          margin: 10,
+          marginTop: 80,
+          fontSize: 40,
+          fontWeight: 'bold',
+          textAlign: 'center',
+        }}>
+        Please Sign In
+      </Text>
       <TextInput
         placeholder="Username"
         value={username}

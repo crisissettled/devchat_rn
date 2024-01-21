@@ -1,16 +1,17 @@
 import {useEffect, useState} from 'react';
 import {View, Text, Button, TextInput} from 'react-native';
 
-import {PropsCreatePost} from '../types/StackScreen';
+import {PropsChatTabs} from '../types/StackScreen';
+import {RouterNames} from '../utils/constants';
 
-function CreatePostScreen({navigation, route}: PropsCreatePost) {
+function CreatePostScreen({navigation, route}: PropsChatTabs) {
   const [postText, setPostText] = useState('');
   const {userId} = route.params;
 
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <Button title="back" onPress={() => navigation.navigate('Home')} />
+        <Button title="back" onPress={() => navigation.navigate('SignIn')} />
       ),
     });
   }, []);
@@ -35,7 +36,7 @@ function CreatePostScreen({navigation, route}: PropsCreatePost) {
           onPress={() => {
             // Pass and merge params back to home screen
             navigation.navigate({
-              name: 'Home',
+              name: 'SignIn',
               params: {post: postText},
               merge: true,
             });
