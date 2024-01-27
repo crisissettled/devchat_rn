@@ -1,8 +1,7 @@
 import {useEffect, useState} from 'react';
 import {View, Text, Button, TextInput} from 'react-native';
 
-import {PropsChatTabs} from '../types/StackScreen';
-import {RouterNames} from '../utils/constants';
+import {PropsChatTabs} from '@shared/types/navigationTypes';
 
 function CreatePostScreen({navigation, route}: PropsChatTabs) {
   const [postText, setPostText] = useState('');

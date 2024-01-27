@@ -4,6 +4,7 @@ function SplashScreen() {
   return (
     <View>
       <Text>Loading...</Text>
+      <ActivityIndicator></ActivityIndicator>
     </View>
   );
 }

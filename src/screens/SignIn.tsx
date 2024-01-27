@@ -1,7 +1,7 @@
 import {useState, useContext} from 'react';
 import {Text, TextInput, View, Button, StyleSheet} from 'react-native';
 
-import {AuthContext} from '../utils/authContext';
+import {AuthContext} from '@utils/authContext';
 
 const styles = StyleSheet.create({
   input: {

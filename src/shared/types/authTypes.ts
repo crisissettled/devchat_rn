@@ -1,15 +1,15 @@
-export type AuthStateProps = {
+export type PropsAuthState = {
   isLoading: boolean;
   isSignout: boolean;
   userToken?: string | null;
 };
 
-export type AuthActionProps = {
+export type PropsAuthAction = {
   token?: string | null;
   type: 'RESTORE_TOKEN' | 'SIGN_IN' | 'SIGN_OUT';
 };
 
-export type AuthContextProps = {
+export type PropsAuthContext = {
   signIn: ({username, password}: SignInParams) => void;
   signOut: () => void;
   signUp: () => void;
