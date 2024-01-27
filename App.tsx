@@ -1,15 +1,17 @@
-import {useState, useEffect, useReducer, useMemo} from 'react';
+import {useEffect, useReducer, useMemo} from 'react';
+
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import SplashScreen from '@screens/SplashScreen';
 import SignInScreen from '@screens/SignIn';
-import HomeScreen from '@screens/HomeScreen';
+import ChatTabsScreen from '@screens/ChatTabs';
 
 import {AuthContext} from '@utils/authContext';
 
 import {PropsAuthState, PropsAuthAction} from '@shared/types/authTypes';
 import {RootStackParamList} from '@shared/types/navigationTypes';
+import {StatusBar} from 'react-native';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -92,7 +94,11 @@ export default function App() {
               }}
             />
           ) : (
-            <Stack.Screen name="ChatTabs" component={HomeScreen} />
+            <Stack.Screen
+              name="ChatTabs"
+              options={{headerShown: false}}
+              component={ChatTabsScreen}
+            />
           )}
         </Stack.Navigator>
       </NavigationContainer>

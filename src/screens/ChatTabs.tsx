@@ -1,58 +1,20 @@
-import {useEffect, useState} from 'react';
-import {View, Text, Button, TextInput} from 'react-native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import {PropsChatTabs} from '@shared/types/navigationTypes';
+import {TabParamList} from '@shared/types/navigationTypes';
+import ChatScreen from '@screens/chat/ChatScreen';
+import FriendsScreen from '@screens/chat/FriendsScreen';
+import ProfileScreen from '@screens/chat/ProfileScreen';
 
-function CreatePostScreen({navigation, route}: PropsChatTabs) {
-  const [postText, setPostText] = useState('');
-  const {userId} = route.params;
+const Tab = createBottomTabNavigator<TabParamList>();
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => (
-        <Button title="back" onPress={() => navigation.navigate('SignIn')} />
-      ),
-    });
-  }, []);
-
+function ChatTabsScreen() {
   return (
-    <>
-      <View>
-        <Text style={{padding: 10, fontSize: 35, fontWeight: 'bold'}}>
-          Hi {userId},
-        </Text>
-      </View>
-      <TextInput
-        multiline
-        placeholder="What's on your mind?"
-        style={{height: 200, padding: 10, backgroundColor: 'white'}}
-        value={postText}
-        onChangeText={setPostText}
-      />
-      <View style={{padding: 5}}>
-        <Button
-          title="Done"
-          onPress={() => {
-            // Pass and merge params back to home screen
-            navigation.navigate({
-              name: 'SignIn',
-              params: {post: postText},
-              merge: true,
-            });
-          }}
-        />
-      </View>
-      <View style={{padding: 5}}>
-        <Button
-          title="Change Title"
-          onPress={() => {
-            const r = (Math.random() * 100).toFixed(2);
-            navigation.setOptions({title: `New Create Post - ${r}`});
-          }}
-        />
-      </View>
-    </>
+    <Tab.Navigator>
+      <Tab.Screen name="Chat" component={ChatScreen} />
+      <Tab.Screen name="Friends" component={FriendsScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+    </Tab.Navigator>
   );
 }
 
-export default CreatePostScreen;
+export default ChatTabsScreen;
