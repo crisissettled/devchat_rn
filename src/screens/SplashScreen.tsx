@@ -2,8 +2,8 @@ import {Text, View, ActivityIndicator} from 'react-native';
 
 function SplashScreen() {
   return (
-    <View>
-      <Text>Loading...</Text>
+    <View style={{flex: 1, justifyContent: 'center', alignContent: 'center'}}>
+      <Text style={{fontSize: 20, textAlign: 'center'}}>processing...</Text>
       <ActivityIndicator></ActivityIndicator>
     </View>
   );
