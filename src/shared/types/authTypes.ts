@@ -7,6 +7,7 @@ export type PropsAuthState = {
 export type PropsAuthAction = {
   token?: string | null;
   type: 'RESTORE_TOKEN' | 'SIGN_IN' | 'SIGN_OUT';
+  isLoading: boolean;
 };
 
 export type PropsAuthContext = {

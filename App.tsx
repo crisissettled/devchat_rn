@@ -17,7 +17,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   const initState = {
-    isLoading: true,
+    isLoading: false,
     isSignout: false,
     userToken: null,
   };
@@ -29,11 +29,10 @@ export default function App() {
           return {
             ...prevState,
             userToken: action.token,
-            isLoading: false,
           };
         case 'SIGN_IN':
           return {
-            ...prevState,
+            isLoading: action.isLoading,
             isSignout: false,
             userToken: action.token,
           };
@@ -57,20 +56,52 @@ export default function App() {
       } catch (e) {
         // Restoring token failed
       }
-      dispatch({type: 'RESTORE_TOKEN', token: userToken});
+      dispatch({type: 'RESTORE_TOKEN', token: userToken, isLoading: false});
     };
 
     bootstrapAsync();
   }, []);
 
+  console.log(state, 'state--->');
+
   const authContext = useMemo(
     () => ({
       signIn: async () => {
-        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
+        dispatch({
+          type: 'SIGN_IN',
+          isLoading: true,
+        });
+
+        fetch('https://zcvf.io/devchat//api/User/SignIn', {
+          method: 'PUT',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: 'james',
+            password: 'aaa',
+            keepLoggedIn: true,
+          }),
+        })
+          .then(response => response.json())
+          .then(result => {
+            setTimeout(() => {
+              dispatch({
+                type: 'SIGN_IN',
+                token: result?.data?.token,
+                isLoading: false,
+              });
+            }, 1000);
+          });
       },
-      signOut: () => dispatch({type: 'SIGN_OUT'}),
+      signOut: () => dispatch({type: 'SIGN_OUT', isLoading: false}),
       signUp: async () => {
-        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
+        dispatch({
+          type: 'SIGN_IN',
+          token: 'dummy-auth-token',
+          isLoading: false,
+        });
       },
     }),
     [],
@@ -79,7 +110,7 @@ export default function App() {
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator screenOptions={{headerShown: false}}>
           {state.isLoading ? (
             <Stack.Screen name="Splash" component={SplashScreen} />
           ) : state.userToken == null ? (
@@ -88,7 +119,6 @@ export default function App() {
               component={SignInScreen}
               options={{
                 title: 'Sign in',
-                headerShown: false,
                 // When logging out, a pop animation feels intuitive
                 animationTypeForReplace: state.isSignout ? 'pop' : 'push',
               }}
