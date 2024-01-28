@@ -1,7 +1,8 @@
-import {useState, useContext} from 'react';
+import {useState} from 'react';
 import {Text, TextInput, View, Button, StyleSheet} from 'react-native';
 
-import {AuthContext} from '@utils/authContext';
+import {userSignIn} from '@app/user/userSlice';
+import {useAppDispatch} from '@app/store';
 
 const styles = StyleSheet.create({
   input: {
@@ -13,10 +14,10 @@ const styles = StyleSheet.create({
 });
 
 function SignInScreen() {
-  const [username, setUsername] = useState('');
+  const [userId, setuserId] = useState('');
   const [password, setPassword] = useState('');
-
-  const {signIn} = useContext(AuthContext);
+  const [keepLoggedIn, setkeepLoggedIn] = useState(true);
+  const dispatch = useAppDispatch();
 
   return (
     <View>
@@ -32,8 +33,8 @@ function SignInScreen() {
       </Text>
       <TextInput
         placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
+        value={userId}
+        onChangeText={setuserId}
       />
       <TextInput
         placeholder="Password"
@@ -41,7 +42,10 @@ function SignInScreen() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="Sign in" onPress={() => signIn({username, password})} />
+      <Button
+        title="Sign in"
+        onPress={() => dispatch(userSignIn({userId, password, keepLoggedIn}))}
+      />
     </View>
   );
 }
