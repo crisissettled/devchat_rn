@@ -75,9 +75,7 @@ export const userSlice = createSlice({
       state.userId = action.payload.userId;
     },
     doSignOut: state => {
-      state.isSignedIn = false;
-      state.token = '';
-      state.userId = '';
+      _signUserOut(state);
     },
     updateHubConnectionState(state, {payload}) {
       state.hubConnectionState = payload?.connectionState;
@@ -96,7 +94,7 @@ export const userSlice = createSlice({
       })
       .addCase(userSignIn.rejected, (state, action) => {
         state.status = FetchStatus.REJECTED;
-        signUserOut(state);
+        _signUserOut(state);
         if (action.payload) {
           state.error = action.payload;
         } else {
@@ -108,7 +106,7 @@ export const userSlice = createSlice({
       })
       .addCase(userSignOut.fulfilled, (state, {payload}) => {
         state.status = FetchStatus.FULFILLED;
-        signUserOut(state);
+        _signUserOut(state);
       })
       .addCase(userSignOut.rejected, (state, action) => {
         state.status = FetchStatus.REJECTED;
@@ -156,7 +154,7 @@ export const userSlice = createSlice({
   },
 });
 
-const signUserOut = (state: UserState) => {
+const _signUserOut = (state: UserState) => {
   state.isSignedIn = false;
   state.token = '';
   state.userId = '';
