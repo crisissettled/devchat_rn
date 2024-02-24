@@ -9,3 +9,9 @@ export interface UserState {
   error: any;
   data: any;
 }
+
+export interface PayloadUserSignIn {
+  userId: string;
+  password: string;
+  keepLoggedIn: boolean;
+}

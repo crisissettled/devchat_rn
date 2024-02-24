@@ -1,13 +1,13 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 import {ApiEndPoints} from '@shared/constants';
 import {httpFetch} from '@utils/httpFetch';
 import {FetchStatus} from '@shared/types/enums';
-import {UserState} from '@app/user/types';
+import {PayloadUserSignIn, UserState} from '@app/user/types';
 
 export const userSignIn = createAsyncThunk(
   ApiEndPoints.USER_SIGN_IN,
-  async (data, thunkAPI) => {
+  async (data: PayloadUserSignIn, thunkAPI) => {
     let response = await httpFetch(
       ApiEndPoints.USER_SIGN_IN,
       'PUT',
