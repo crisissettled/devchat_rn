@@ -3,7 +3,7 @@ import {
   Text,
   TextInput,
   View,
-  Button,
+  TouchableHighlight,
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
@@ -22,15 +22,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   container: {
-    marginLeft: 5,
-    marginRight: 5,
+    marginHorizontal: 30,
     flex: 1,
   },
   input: {
     borderColor: '#808080',
     borderWidth: 1,
     borderRadius: 8,
-    marginBottom: 10,
+    marginBottom: 15,
     height: 48,
   },
   signInButtonCommon: {
@@ -47,7 +46,7 @@ const styles = StyleSheet.create({
   },
   signInbuttonTextCommon: {
     textAlign: 'center',
-    width: 230,
+    width: 260,
     padding: 15,
     fontSize: 20,
   },
@@ -61,7 +60,7 @@ const styles = StyleSheet.create({
   alignItemsCenter: {alignItems: 'center'},
 });
 
-function SignInScreen() {
+function SignInScreen({navigation}) {
   const [userId, setuserId] = useState('');
   const [password, setPassword] = useState('');
   const [keepLoggedIn, setkeepLoggedIn] = useState(true);
@@ -99,7 +98,7 @@ function SignInScreen() {
       <Text style={styles.title}>Please Sign In</Text>
       <View>
         <TextInput
-          placeholder="Username"
+          placeholder="User Name"
           value={userId}
           onChangeText={setuserId}
           style={styles.input}
@@ -133,6 +132,31 @@ function SignInScreen() {
             Biometrics
           </Text>
         </TouchableOpacity>
+      </View>
+
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          marginTop: 5,
+        }}>
+        <TouchableHighlight
+          activeOpacity={0.6}
+          underlayColor="#DDDDDD"
+          onPress={() => navigation.navigate('SignUp')}
+          style={{height: 50, borderRadius: 10, padding: 10, width: 260}}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'center',
+            }}>
+            <Text style={{fontSize: 15}}>Not have an account? </Text>
+            <Text style={{fontSize: 15, textDecorationLine: 'underline'}}>
+              Sign Up
+            </Text>
+          </View>
+        </TouchableHighlight>
       </View>
     </View>
   );

@@ -4,8 +4,9 @@ import {useSelector} from 'react-redux';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import SplashScreen from '@screens/SplashScreen';
-import SignInScreen from '@screens/SignIn';
-import ChatTabsScreen from '@screens/ChatTabs';
+import SignInScreen from '@screens/SignInScreen';
+import ChatTabsScreen from '@screens/ChatTabsScreen';
+import SignUpScreen from '@screens/SignUpScreen';
 
 import {RootState} from '@app/store';
 import {RootStackParamList} from '@shared/types/navigationTypes';
@@ -38,6 +39,14 @@ export default function RootStackScreen() {
           component={ChatTabsScreen}
         />
       )}
+
+      <Stack.Screen
+        name="SignUp"
+        component={SignUpScreen}
+        options={{
+          title: 'Sign Up',
+        }}
+      />
     </Stack.Navigator>
   );
 }

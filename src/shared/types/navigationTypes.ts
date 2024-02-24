@@ -5,6 +5,7 @@ export type RootStackParamList = {
   Splash: undefined;
   SignIn: {post: string} | undefined;
   ChatTabs: NavigatorScreenParams<TabParamList>;
+  SignUp: undefined;
 };
 
 export type PropsSignIn = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
