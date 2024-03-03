@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import {Alert, BackHandler} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import {TabParamList} from '@shared/types/navigationTypes';
+import {TabParamList} from 'screens/types';
 import ChatScreen from '@screens/chat/ChatScreen';
 import FriendsScreen from '@screens/chat/FriendsScreen';
 import ProfileScreen from '@screens/chat/ProfileScreen';

@@ -40,6 +40,8 @@ export const RequestMethod = {
   DELETE: 'DELETE',
 };
 
+export const baseUrl = 'https://zcvf.io/devchat';
+
 export const ApiEndPoints = {
   HUB_CHAT: '/hubs/chat',
   USER_SIGN_IN: '/api/User/SignIn',

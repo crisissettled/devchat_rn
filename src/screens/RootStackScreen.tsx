@@ -9,7 +9,7 @@ import ChatTabsScreen from '@screens/ChatTabsScreen';
 import SignUpScreen from '@screens/SignUpScreen';
 
 import {RootState} from '@app/store';
-import {RootStackParamList} from '@shared/types/navigationTypes';
+import {RootStackParamList} from 'screens/types';
 import {FetchStatus} from '@shared/types/enums';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

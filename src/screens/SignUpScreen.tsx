@@ -1,12 +1,16 @@
+import {useEffect, useState} from 'react';
 import {
   Text,
   TextInput,
   View,
-  TouchableHighlight,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from 'react-native';
-import {useEffect, useState} from 'react';
+
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import {RESULT_CODE_SUCCESS, baseUrl} from '@shared/constants';
+import {PropsSignUp} from 'screens/types';
 
 const styles = StyleSheet.create({
   title: {
@@ -48,9 +52,71 @@ const styles = StyleSheet.create({
   alignItemsCenter: {alignItems: 'center'},
 });
 
-export default function SignUpScreen() {
+export default function SignUpScreen({navigation}: PropsSignUp) {
   const [userId, setuserId] = useState('');
   const [password, setPassword] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
+  const [isTermsServiceSelected, setTermsServiceSelected] = useState(false);
+
+  // const [isSuccess, setIsSuccess] = useState(false);
+  // const [toSignInPage, setToSignInPage] = useState(false);
+
+  // useEffect(() => {
+  //   let timer: ReturnType<typeof setTimeout>;
+  //   if (isSuccess === true)
+  //     timer = setTimeout(() => setToSignInPage(true), 2000);
+
+  //   return () => clearTimeout(timer);
+  // }, [isSuccess]);
+
+  // if (toSignInPage === true) {
+  //   navigation.navigate('SignIn');
+  //   return;
+  // }
+
+  const handleSubmit = async () => {
+    if (userId === '' || password === '') {
+      Alert.alert('Warning', 'Please enter user id and password!');
+      return;
+    }
+
+    if (password !== repeatPassword) {
+      Alert.alert('Warning', 'Two passwords do NOT match!');
+      return;
+    }
+
+    if (isTermsServiceSelected === false) {
+      Alert.alert('Warning', 'Please agree the Terms of services!');
+      return;
+    }
+
+    const response = await fetch(`${baseUrl}/api/User/SignUp`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({userId, password, name: userId}), // name is userId by default
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      if (result.code === RESULT_CODE_SUCCESS) {
+        // setIsSuccess(true);
+        Alert.alert(
+          'success',
+          'Sigup success, you will be redirected to Signin page',
+          [
+            {
+              text: 'Ok',
+              onPress: () => navigation.navigate('SignIn'),
+            },
+          ],
+        );
+      }
+    } else {
+      Alert.alert('Failed', 'Sigup failed, please try later!');
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -69,14 +135,37 @@ export default function SignUpScreen() {
           secureTextEntry
           style={styles.input}
         />
+        <TextInput
+          placeholder="Repeat Your Password"
+          value={repeatPassword}
+          onChangeText={setRepeatPassword}
+          secureTextEntry
+          style={styles.input}
+        />
+      </View>
+      <View style={(styles.alignItemsCenter, {marginBottom: 15})}>
+        <BouncyCheckbox
+          isChecked={isTermsServiceSelected}
+          size={30}
+          text="I agree all statements in Terms of service"
+          iconStyle={{borderColor: 'red'}}
+          innerIconStyle={{borderWidth: 2}}
+          textStyle={{
+            fontFamily: 'JosefinSans-Regular',
+            textDecorationLine: 'none',
+          }}
+          onPress={(isChecked: boolean) => {
+            setTermsServiceSelected(isChecked);
+          }}
+        />
       </View>
       <View style={styles.alignItemsCenter}>
         <TouchableOpacity
           style={[styles.signUpButtonCommon, styles.signUpButton]}
-          onPress={() => console.log('sign up')}>
+          onPress={handleSubmit}>
           <Text
             style={[styles.signUpbuttonTextCommon, styles.signUpButtonText]}>
-            Sign in
+            Register
           </Text>
         </TouchableOpacity>
       </View>

@@ -12,6 +12,7 @@ import RNBiometrics from 'react-native-simple-biometrics';
 
 import {userSignIn} from '@app/user/userSlice';
 import {useAppDispatch} from '@app/store';
+import {PropsSignIn} from 'screens/types';
 
 const styles = StyleSheet.create({
   title: {
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
   alignItemsCenter: {alignItems: 'center'},
 });
 
-function SignInScreen({navigation}) {
+function SignInScreen({navigation}: PropsSignIn) {
   const [userId, setuserId] = useState('');
   const [password, setPassword] = useState('');
   const [keepLoggedIn, setkeepLoggedIn] = useState(true);

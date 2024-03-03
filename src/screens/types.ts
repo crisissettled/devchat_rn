@@ -15,6 +15,8 @@ export type PropsChatTabs = NativeStackScreenProps<
   'ChatTabs'
 >;
 
+export type PropsSignUp = NativeStackScreenProps<RootStackParamList, 'SignUp'>;
+
 export type TabParamList = {
   Chat: undefined;
   Friends: undefined;
