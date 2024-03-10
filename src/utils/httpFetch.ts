@@ -1,7 +1,10 @@
 import {doSignIn} from '@app/user/userSlice';
 import {ApiEndPoints} from '@shared/constants';
 import {baseUrl} from '@shared/constants';
-import {getCookieOfRefreshToken} from '@utils/refreshTokenCookie';
+import {
+  getCookieOfRefreshToken,
+  saveCookieOfRefreshToken,
+} from '@utils/refreshTokenCookie';
 
 export async function httpFetch(
   endpoint: string,
@@ -36,6 +39,8 @@ export async function httpFetch(
   if (response.status === 401 && url !== ApiEndPoints.USER_SIGN_IN) {
     response = await refreshToken();
     if (response.ok) {
+      await saveCookieOfRefreshToken(response);
+
       let result = await response.json();
       let newToken = result?.data?.token;
       dispatch(
