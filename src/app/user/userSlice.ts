@@ -4,7 +4,7 @@ import {ApiEndPoints} from '@shared/constants';
 import {httpFetch} from '@utils/httpFetch';
 import {FetchStatus} from '@shared/types/enums';
 import {PayloadUserSignIn, UserState} from '@app/user/types';
-import {getRefreshToken, saveRefreshToken} from '@utils/refreshToken';
+import {saveCookieOfRefreshToken} from '@utils/refreshTokenCookie';
 
 export const userSignIn = createAsyncThunk(
   ApiEndPoints.USER_SIGN_IN,
@@ -16,7 +16,7 @@ export const userSignIn = createAsyncThunk(
       data,
     );
 
-    await saveRefreshToken(response);
+    await saveCookieOfRefreshToken(response);
 
     return response.json();
   },

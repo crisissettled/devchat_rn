@@ -1,6 +1,7 @@
 import {doSignIn} from '@app/user/userSlice';
 import {ApiEndPoints} from '@shared/constants';
 import {baseUrl} from '@shared/constants';
+import {getCookieOfRefreshToken} from '@utils/refreshTokenCookie';
 
 export async function httpFetch(
   endpoint: string,
@@ -55,17 +56,15 @@ export async function httpFetch(
 }
 
 export async function refreshToken() {
-  const requestOptions: RequestInit = {
+  const cookieValue = await getCookieOfRefreshToken();
+  const refreshTokenUrl = `${baseUrl}${ApiEndPoints.USER_REFRESH_SIGN_IN}`;
+  const response = await fetch(refreshTokenUrl, {
     method: 'PUT',
-    mode: 'same-origin', // no-cors, *cors, same-origin
-    credentials: 'same-origin',
-  };
-
-  const request = new Request(
-    ApiEndPoints.USER_REFRESH_SIGN_IN,
-    requestOptions,
-  );
-  const response = await fetch(request);
+    mode: 'cors', // no-cors, *cors, same-origin
+    headers: {
+      Cookie: cookieValue,
+    },
+  });
 
   return response;
 }

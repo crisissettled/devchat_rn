@@ -14,7 +14,7 @@ import RNBiometrics from 'react-native-simple-biometrics';
 
 import {userSignIn} from '@app/user/userSlice';
 import {useAppDispatch} from '@app/store';
-import {PropsSignIn} from 'screens/types';
+import {PropsSignIn} from '@screens/types';
 
 const styles = StyleSheet.create({
   title: {

@@ -5,7 +5,7 @@ import {
 } from 'react-native-keychain';
 import {refreshTokenKey} from '@shared/constants';
 
-export const saveRefreshToken = async (response: Response) => {
+export const saveCookieOfRefreshToken = async (response: Response) => {
   let refreshToken = null;
   if (response !== null) {
     let cookieString = response.headers.get('Set-Cookie');
@@ -13,15 +13,11 @@ export const saveRefreshToken = async (response: Response) => {
       let cookieItems = cookieString.split(';');
       for (let cookie of cookieItems) {
         if (cookie.indexOf(refreshTokenKey) > -1) {
-          const refreshTokenItems = cookie.split('=');
-          if (refreshTokenItems.length > 0) {
-            refreshToken = refreshTokenItems[1];
-
-            break;
-          }
+          refreshToken = cookie;
+          break;
         }
       }
-      console.log(refreshToken, 'refreshToken');
+      console.log(refreshToken, 'saveCookieOfRefreshToken');
 
       if (refreshToken !== null) {
         // Store the credentials
@@ -34,7 +30,7 @@ export const saveRefreshToken = async (response: Response) => {
   }
 };
 
-export const getRefreshToken = async () => {
+export const getCookieOfRefreshToken = async () => {
   let token = '';
   try {
     // Retrieve the credentials
