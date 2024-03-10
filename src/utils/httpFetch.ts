@@ -1,10 +1,9 @@
 import {doSignIn} from '@app/user/userSlice';
 import {ApiEndPoints} from '@shared/constants';
-
-const baseUrl = 'https://zcvf.io/devchat/';
+import {baseUrl} from '@shared/constants';
 
 export async function httpFetch(
-  url: string,
+  endpoint: string,
   method: string,
   thunkAPI: any,
   data: any = null,
@@ -13,7 +12,7 @@ export async function httpFetch(
   const dispatch = thunkAPI.dispatch;
   const token = user.token;
 
-  url = `${baseUrl}${url}`;
+  const url = `${baseUrl}${endpoint}`;
 
   const headers = new Headers({
     'Content-Type': 'application/json;charset=utf-8',

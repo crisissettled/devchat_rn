@@ -6,8 +6,10 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from 'react-native';
 
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import RNBiometrics from 'react-native-simple-biometrics';
 
 import {userSignIn} from '@app/user/userSlice';
@@ -32,6 +34,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 15,
     height: 48,
+    paddingHorizontal: 15,
+    fontSize: 20,
   },
   signInButtonCommon: {
     borderRadius: 25,
@@ -47,7 +51,7 @@ const styles = StyleSheet.create({
   },
   signInbuttonTextCommon: {
     textAlign: 'center',
-    width: 260,
+    width: 300,
     padding: 15,
     fontSize: 20,
   },
@@ -59,14 +63,27 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   alignItemsCenter: {alignItems: 'center'},
+  trustThisDevice: {alignItems: 'flex-start', marginBottom: 15},
 });
 
 function SignInScreen({navigation}: PropsSignIn) {
-  const [userId, setuserId] = useState('');
-  const [password, setPassword] = useState('');
-  const [keepLoggedIn, setkeepLoggedIn] = useState(true);
+  const [userId, setUserId] = useState('james');
+  const [password, setPassword] = useState('aaa');
+  const [keepLoggedIn, setkeepLoggedIn] = useState(false);
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    //biometricsAuth();
+  }, []);
+
+  const handlSignIn = async () => {
+    if (userId === '' || password === '') {
+      Alert.alert('Warning', 'Please enter User Id and Password!');
+      return;
+    }
+
+    dispatch(userSignIn({userId, password, keepLoggedIn}));
+  };
   const biometricsAuth = async () => {
     // Check if biometric authentication is available
     const can = await RNBiometrics.canAuthenticate();
@@ -90,18 +107,14 @@ function SignInScreen({navigation}: PropsSignIn) {
     }
   };
 
-  useEffect(() => {
-    //biometricsAuth();
-  }, []);
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Please Sign In</Text>
       <View>
         <TextInput
-          placeholder="User Name"
+          placeholder="User Id"
           value={userId}
-          onChangeText={setuserId}
+          onChangeText={setUserId}
           style={styles.input}
         />
         <TextInput
@@ -112,12 +125,26 @@ function SignInScreen({navigation}: PropsSignIn) {
           style={styles.input}
         />
       </View>
+      <View style={styles.trustThisDevice}>
+        <BouncyCheckbox
+          isChecked={keepLoggedIn}
+          size={30}
+          text="Trust this device"
+          iconStyle={{borderColor: '#7fff00'}}
+          innerIconStyle={{borderWidth: 2}}
+          textStyle={{
+            fontFamily: 'JosefinSans-Regular',
+            textDecorationLine: 'none',
+          }}
+          onPress={(isChecked: boolean) => {
+            setkeepLoggedIn(isChecked);
+          }}
+        />
+      </View>
       <View style={styles.alignItemsCenter}>
         <TouchableOpacity
           style={[styles.signInButtonCommon, styles.signInButton]}
-          onPress={() =>
-            dispatch(userSignIn({userId, password, keepLoggedIn}))
-          }>
+          onPress={handlSignIn}>
           <Text
             style={[styles.signInbuttonTextCommon, styles.signInButtonText]}>
             Sign in

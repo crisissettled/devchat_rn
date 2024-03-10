@@ -76,7 +76,7 @@ export default function SignUpScreen({navigation}: PropsSignUp) {
 
   const handleSubmit = async () => {
     if (userId === '' || password === '') {
-      Alert.alert('Warning', 'Please enter user id and password!');
+      Alert.alert('Warning', 'Please enter User id and Password!');
       return;
     }
 
@@ -123,7 +123,7 @@ export default function SignUpScreen({navigation}: PropsSignUp) {
       <Text style={styles.title}>Sign Up</Text>
       <View>
         <TextInput
-          placeholder="Your User Name"
+          placeholder="Your User Id"
           value={userId}
           onChangeText={setuserId}
           style={styles.input}

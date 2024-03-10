@@ -57,3 +57,5 @@ export const ApiEndPoints = {
   SEND_CHAT_MESSAGE: '/api/ChatMessage/SendMessage',
   UPDATE_CHAT_MESSAGE_READ_STATUS: '/api/ChatMessage/UpdateMessageReadStatus',
 };
+
+export const refreshTokenKey = 'ChatRT';

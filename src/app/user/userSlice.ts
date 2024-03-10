@@ -4,6 +4,7 @@ import {ApiEndPoints} from '@shared/constants';
 import {httpFetch} from '@utils/httpFetch';
 import {FetchStatus} from '@shared/types/enums';
 import {PayloadUserSignIn, UserState} from '@app/user/types';
+import {getRefreshToken, saveRefreshToken} from '@utils/refreshToken';
 
 export const userSignIn = createAsyncThunk(
   ApiEndPoints.USER_SIGN_IN,
@@ -14,6 +15,9 @@ export const userSignIn = createAsyncThunk(
       thunkAPI,
       data,
     );
+
+    await saveRefreshToken(response);
+
     return response.json();
   },
 );
@@ -87,6 +91,10 @@ export const userSlice = createSlice({
         state.status = FetchStatus.PENDING;
       })
       .addCase(userSignIn.fulfilled, (state, {payload}) => {
+        // getRefreshToken().then(token =>
+        //   console.log(token, 'refreshToken - fulfilled'),
+        // );
+
         state.status = FetchStatus.FULFILLED;
         state.token = payload.data.token;
         state.isSignedIn = true;

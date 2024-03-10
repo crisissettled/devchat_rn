@@ -1,4 +1,3 @@
-import {View, Text} from 'react-native';
 import React from 'react';
 import {useSelector} from 'react-redux';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -9,7 +8,7 @@ import ChatTabsScreen from '@screens/ChatTabsScreen';
 import SignUpScreen from '@screens/SignUpScreen';
 
 import {RootState} from '@app/store';
-import {RootStackParamList} from 'screens/types';
+import {RootStackParamList} from '@screens/types';
 import {FetchStatus} from '@shared/types/enums';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
