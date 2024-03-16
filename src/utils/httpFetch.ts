@@ -37,18 +37,14 @@ export async function httpFetch(
   if (response.ok) return response;
 
   if (response.status === 401 && url !== ApiEndPoints.USER_SIGN_IN) {
-    response = await refreshToken();
-    if (response.ok) {
-      await saveCookieOfRefreshToken(response);
-
-      let result = await response.json();
-      let newToken = result?.data?.token;
+    const result = await refreshToken();
+    if (result !== null) {
       dispatch(
-        doSignIn({signedIn: true, token: newToken, userId: user.userId}),
+        doSignIn({signedIn: true, token: result.newToken, userId: user.userId}),
       );
 
       //fetch-retry with new token
-      headers.set('Authorization', `Bearer ${newToken}`);
+      headers.set('Authorization', `Bearer ${result.newToken}`);
       const requestRetry = new Request(url, requestOptions);
 
       response = await fetch(requestRetry);
@@ -60,7 +56,12 @@ export async function httpFetch(
   return Promise.reject(response.status);
 }
 
-export async function refreshToken() {
+interface RefreshToken {
+  newToken: string;
+  userId: string;
+}
+
+export async function refreshToken(): Promise<RefreshToken | null> {
   const cookieValue = await getCookieOfRefreshToken();
   const refreshTokenUrl = `${baseUrl}${ApiEndPoints.USER_REFRESH_SIGN_IN}`;
   const response = await fetch(refreshTokenUrl, {
@@ -71,5 +72,13 @@ export async function refreshToken() {
     },
   });
 
-  return response;
+  if (response.ok) {
+    await saveCookieOfRefreshToken(response);
+    let result = await response.json();
+    let newToken = result?.data?.token;
+    let userId = result?.data?.userId;
+    return {newToken, userId};
+  }
+
+  return null;
 }

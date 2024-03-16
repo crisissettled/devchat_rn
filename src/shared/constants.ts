@@ -58,4 +58,10 @@ export const ApiEndPoints = {
   UPDATE_CHAT_MESSAGE_READ_STATUS: '/api/ChatMessage/UpdateMessageReadStatus',
 };
 
-export const refreshTokenKey = 'ChatRT';
+export const RefreshTokenKey = 'ChatRT';
+
+export const UserPreferenceAsyncStorageKey = 'userPreference';
+export const UserPreferenceKeys = {
+  useBiometrics: 'biometrics',
+  userId: 'userid',
+};

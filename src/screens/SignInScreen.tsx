@@ -12,9 +12,15 @@ import {
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import RNBiometrics from 'react-native-simple-biometrics';
 
-import {userSignIn} from '@app/user/userSlice';
+import {doSignIn, userSignIn} from '@app/user/userSlice';
 import {useAppDispatch} from '@app/store';
 import {PropsSignIn} from '@screens/types';
+import {getAsyncStorage} from '@utils/asyncStorage';
+import {
+  UserPreferenceAsyncStorageKey,
+  UserPreferenceKeys,
+} from '@shared/constants';
+import {refreshToken} from '@utils/httpFetch';
 
 const styles = StyleSheet.create({
   title: {
@@ -71,9 +77,26 @@ function SignInScreen({navigation}: PropsSignIn) {
   const [password, setPassword] = useState('aaa');
   const [keepLoggedIn, setkeepLoggedIn] = useState(false);
   const dispatch = useAppDispatch();
+  const [showBiometrics, setShowBiometrics] = useState(false);
+  const [userIdInAsyncStorage, setUserIdInAsyncStorage] = useState('');
 
   useEffect(() => {
     //biometricsAuth();
+    const getUserPreference = async () => {
+      const userPreference = await getAsyncStorage(
+        UserPreferenceAsyncStorageKey,
+      );
+
+      if (userPreference) {
+        const jsonObj = JSON.parse(userPreference);
+        if (jsonObj !== null) {
+          setShowBiometrics(jsonObj[UserPreferenceKeys.useBiometrics]);
+          setUserIdInAsyncStorage(jsonObj[UserPreferenceKeys.userId]);
+        }
+      }
+    };
+
+    getUserPreference();
   }, []);
 
   const handlSignIn = async () => {
@@ -81,13 +104,11 @@ function SignInScreen({navigation}: PropsSignIn) {
       Alert.alert('Warning', 'Please enter User Id and Password!');
       return;
     }
-
     dispatch(userSignIn({userId, password, keepLoggedIn}));
   };
+
   const biometricsAuth = async () => {
-    // Check if biometric authentication is available
     const can = await RNBiometrics.canAuthenticate();
-    console.log('biometrics canable', can);
     if (can) {
       try {
         const authorized = await RNBiometrics.requestBioAuth(
@@ -96,13 +117,22 @@ function SignInScreen({navigation}: PropsSignIn) {
         );
 
         console.log('authorized-->', authorized);
-        if (authorized) {
-          dispatch(userSignIn({userId, password, keepLoggedIn}));
+        if (authorized && userIdInAsyncStorage) {
+          const result = await refreshToken();
+          if (result != null && result.userId === userIdInAsyncStorage) {
+            dispatch(
+              doSignIn({
+                signedIn: true,
+                token: result.newToken,
+                userId: userIdInAsyncStorage,
+              }),
+            );
+          } else {
+            Alert.alert('Your session is expired, please re-login!');
+          }
         }
-        // Code to execute when authenticated
       } catch (error) {
-        // Code to handle authentication failure
-        console.log(error, 'error');
+        console.log(error, 'biometricsAuth error');
       }
     }
   };
@@ -151,17 +181,21 @@ function SignInScreen({navigation}: PropsSignIn) {
           </Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.alignItemsCenter}>
-        <TouchableOpacity
-          style={[styles.signInButtonCommon, styles.signInBioButton]}
-          onPress={() => biometricsAuth()}>
-          <Text
-            style={[styles.signInbuttonTextCommon, styles.signInBioButtonText]}>
-            Biometrics
-          </Text>
-        </TouchableOpacity>
-      </View>
-
+      {showBiometrics === true && (
+        <View style={styles.alignItemsCenter}>
+          <TouchableOpacity
+            style={[styles.signInButtonCommon, styles.signInBioButton]}
+            onPress={() => biometricsAuth()}>
+            <Text
+              style={[
+                styles.signInbuttonTextCommon,
+                styles.signInBioButtonText,
+              ]}>
+              Biometrics
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
       <View
         style={{
           flexDirection: 'row',

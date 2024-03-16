@@ -3,25 +3,25 @@ import {
   resetGenericPassword,
   setGenericPassword,
 } from 'react-native-keychain';
-import {refreshTokenKey} from '@shared/constants';
+import {RefreshTokenKey} from '@shared/constants';
 
 export const saveCookieOfRefreshToken = async (response: Response) => {
-  let refreshToken = null;
+  let refreshCookie = null;
   if (response !== null) {
     let cookieString = response.headers.get('Set-Cookie');
     if (cookieString) {
       let cookieItems = cookieString.split(';');
       for (let cookie of cookieItems) {
-        if (cookie.indexOf(refreshTokenKey) > -1) {
-          refreshToken = cookie;
+        if (cookie.indexOf(RefreshTokenKey) > -1) {
+          refreshCookie = cookie;
           break;
         }
       }
-      console.log(refreshToken, 'saveCookieOfRefreshToken');
+      console.log(refreshCookie, 'saveCookieOfRefreshToken');
 
-      if (refreshToken !== null) {
+      if (refreshCookie !== null) {
         // Store the credentials
-        await setGenericPassword(refreshTokenKey, refreshToken);
+        await setGenericPassword(RefreshTokenKey, refreshCookie);
       }
 
       // console.log(cookieString, 'response-inspect cookieString');
