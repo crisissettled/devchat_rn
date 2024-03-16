@@ -16,12 +16,12 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function RootStackScreen() {
   const user = useSelector((state: RootState) => state.user);
 
-  console.log(user.status, 'user.status');
+  console.log(user, '<-----logged in user');
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       {user.status === FetchStatus.PENDING ? (
         <Stack.Screen name="Splash" component={SplashScreen} />
-      ) : user.token == null ? (
+      ) : user.token == null || user.token === '' ? (
         <Stack.Screen
           name="SignIn"
           component={SignInScreen}

@@ -52,3 +52,7 @@ export const getCookieOfRefreshToken = async () => {
 
   return token;
 };
+
+export const clearCookieOfRefreshToken = async () => {
+  await resetGenericPassword();
+};
