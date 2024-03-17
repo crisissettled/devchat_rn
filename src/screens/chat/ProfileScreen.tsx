@@ -86,6 +86,13 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
+      <View></View>
+      <View
+        style={{
+          borderBottomColor: 'black',
+          borderBottomWidth: StyleSheet.hairlineWidth,
+        }}
+      />
       <View style={styles.marginEle}>
         <BouncyCheckbox
           disableBuiltInState
